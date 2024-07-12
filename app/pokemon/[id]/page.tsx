@@ -20,6 +20,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export async function generateStaticParams() {
+  const limit = 1302;
+  const  pokemons  = await fetchPokemonAllList(1, limit);
+  return pokemons.map((pokemon: { formattedId: { toString: () => any; }; }) => ({
+    id: pokemon.formattedId.toString(),
+  }));
+}
+
 const PokemonPage = async ({ params }: Props) => {
   const id = params.id;
 
