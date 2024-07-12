@@ -7,7 +7,7 @@ import NavigationButtons from '@/app/components/atoms/NavigationButtons/Navigati
 import { Metadata } from 'next';
 
 import ModalHeadSection from '@/app/components/organism/ModalHeadSection/ModalHeadSection';
-import { fetchPokemonModal, fetchPokemonSpecies } from '@/app/services/pokemonServices';
+import { fetchPokemonAllList, fetchPokemonModal, fetchPokemonSpecies } from '@/app/services/pokemonServices';
 
 interface Props {
   params: { id: string }
