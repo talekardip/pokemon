@@ -16,8 +16,8 @@ interface HomeProps {
 }
 export async function generateMetadata({ page }: HomeProps): Promise<Metadata> {
   return {
-    title: `PokémonList #${page.page} Details`,
-    description: `List of pokemon on page no: ${page.page}`,
+    title: `PokémonList #${page?.page} Details`,
+    description: `List of pokemon on page no: ${page?.page}`,
   };
 }
 
