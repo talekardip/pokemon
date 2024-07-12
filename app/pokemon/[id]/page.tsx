@@ -15,31 +15,14 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
-    title: `Pokémon #${params.id} Details`,
-    description: `Detailed page on Pokémon ${params.id}`,
+    title: `Pokémon #${params?.id} Details`,
+    description: `Detailed page on Pokémon ${params?.id}`,
   };
 }
 
-export async function generateStaticParams() {
-  const limit = 1302;
-  try {
-    const pokemons = await fetchPokemonAllList(1, limit);
-
-    if (!Array.isArray(pokemons)) {
-      throw new Error('Expected fetchPokemonAllList to return an array');
-    }
-
-    return pokemons.map((pokemon: { id: React.Key | null | undefined }) => ({
-      params: { id: pokemon.id.toString() },
-    }));
-  } catch (error) {
-    console.error('Error in generateStaticParams:', error);
-    throw error;
-  }
-}
 
 const PokemonPage = async ({ params }: Props) => {
-  const id = params.id;
+  const id = params?.id;
 
   try {
     const structuredData = await fetchPokemonModal(id);
