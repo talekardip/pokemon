@@ -29,7 +29,7 @@ export async function generateStaticParams() {
   }
 
   return pokemons.map((pokemon: { id: React.Key | null | undefined }) => ({
-    params: { id: pokemon.id.toString() },
+    params: { id: pokemon?.id?.toString() },
   }));
 }
 
