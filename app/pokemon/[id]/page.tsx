@@ -22,10 +22,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const limit = 1302;
-  const  pokemons  = await fetchPokemonAllList(1, limit);
-  return pokemons.map((pokemon: { id: React.Key | null | undefined; }, index: any) => ({
-    // id: pokemon.formattedId.toString(),
-    id:pokemon.id
+  const pokemons = await fetchPokemonAllList(1, limit);
+
+  if (!Array.isArray(pokemons)) {
+    throw new Error('Expected fetchPokemonAllList to return an array');
+  }
+
+  return pokemons.map((pokemon: { id: React.Key | null | undefined }) => ({
+    params: { id: pokemon.id.toString() },
   }));
 }
 
