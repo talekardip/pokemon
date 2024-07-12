@@ -9,7 +9,7 @@ export const fetchPokemonAllList = async(offset:number,limit:number)=>{
         return res;
     }
     catch(err){
-
+        console.error('Error in fetchPokemonAllList:', err);
     }
 }
 
