@@ -16,11 +16,11 @@ const FilterModal: React.FC<FilterModalProps> = ({ onClose }) => {
                 </div>
                 <div className="space-y-4">
                     <div className="flex justify-between items-center w-full border border-gray-300 rounded">
-                        <Dropdown items={['Normal + 8 More', 'Fighting', 'Flying', 'Poison', 'Ground']} label="Type" />
+                        <Dropdown items={['Normal', 'Fighting', 'Flying', 'Poison', 'Ground','dark','ghost','grass','water']} label="Type" />
                         
                     </div>
                     <div className="flex justify-between items-center w-full border border-gray-300 rounded">
-                        <Dropdown items={['Male + 2 More']} label="Gender" />
+                        <Dropdown items={['Male','Female','genderless']} label="Gender" />
                         
                     </div>
                     <div className="flex justify-between items-center w-full  border border-gray-300 rounded">
