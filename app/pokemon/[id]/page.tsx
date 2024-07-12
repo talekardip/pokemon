@@ -2,7 +2,7 @@ import React from 'react';
 import CreatureDetails from '@/app/components/atoms/ModalCreatureDetail/CreatureDetail';
 import CreatureInfo from '@/app/components/atoms/ModalCreatureInfo/CreatureInfo';
 import Stats from '@/app/components/atoms/ModalStats/ModalStats';
-import EvolutionChain from '@/app/components/molecules/EvolutionChain/EvolutionChain'
+import EvolutionChain from '@/app/components/molecules/EvolutionChain/EvolutionChain';
 import NavigationButtons from '@/app/components/atoms/NavigationButtons/NavigationButtons';
 import { Metadata } from 'next';
 
@@ -22,69 +22,71 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const limit = 1302;
-  const pokemons = await fetchPokemonAllList(1, limit);
+  try {
+    const pokemons = await fetchPokemonAllList(1, limit);
 
-  if (!Array.isArray(pokemons)) {
-    throw new Error('Expected fetchPokemonAllList to return an array');
+    if (!Array.isArray(pokemons)) {
+      throw new Error('Expected fetchPokemonAllList to return an array');
+    }
+
+    return pokemons.map((pokemon: { id: React.Key | null | undefined }) => ({
+      params: { id: pokemon.id.toString() },
+    }));
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error);
+    throw error;
   }
-
-  return pokemons.map((pokemon: { id: React.Key | null | undefined }) => ({
-    params: { id: pokemon?.id?.toString() },
-  }));
 }
 
 const PokemonPage = async ({ params }: Props) => {
   const id = params.id;
 
-  const structuredData = await fetchPokemonModal(id);
-  const formattedData = {
-    image: structuredData?.sprites.other.dream_world.front_default,
-    types: structuredData?.types.map((type: any) => type.type.name),
-    id: structuredData?.id,
-  }
+  try {
+    const structuredData = await fetchPokemonModal(id);
+    const formattedData = {
+      image: structuredData?.sprites.other.dream_world.front_default,
+      types: structuredData?.types.map((type: any) => type.type.name),
+      id: structuredData?.id,
+    };
 
-  const dataSpecies = await fetchPokemonSpecies(id);
-  
+    const dataSpecies = await fetchPokemonSpecies(id);
 
-  return (
-    <div className="fixed inset-0 z-50 flex overflow-y-auto justify-center bg-black bg-opacity-50">
-      <div className="p-5 bg-PRIMARY h-fit rounded-lg max-w-4xl w-full relative flex flex-col ">
-        
-        <ModalHeadSection
-          pokemonData={formattedData}
-          id={id}
-          name={structuredData.name}
-        />
-
-
-        <div className="p-4">
-          <CreatureDetails
-            name={''}
-            id={''}
-            height={structuredData?.height}
-            weight={structuredData?.weight}
-            eggGroups={dataSpecies?.egg_groups}
-            gender = {dataSpecies?.gender_rate}
-          />
-          <CreatureInfo
-            name={structuredData?.name}
+    return (
+      <div className="fixed inset-0 z-50 flex overflow-y-auto justify-center bg-black bg-opacity-50">
+        <div className="p-5 bg-PRIMARY h-fit rounded-lg max-w-4xl w-full relative flex flex-col">
+          <ModalHeadSection
+            pokemonData={formattedData}
             id={id}
-            types={structuredData?.types}
-            abilities={structuredData?.abilities}
+            name={structuredData.name}
           />
-          <Stats
-            data={structuredData?.stats}
-          />
-          <EvolutionChain id={id} chainUrl={dataSpecies?.evolution_chain?.url} />
-        </div>
-        <div className='block sm:hidden'>
-          <NavigationButtons id={Number(id)}/>
+          <div className="p-4">
+            <CreatureDetails
+              name={''}
+              id={''}
+              height={structuredData?.height}
+              weight={structuredData?.weight}
+              eggGroups={dataSpecies?.egg_groups}
+              gender={dataSpecies?.gender_rate}
+            />
+            <CreatureInfo
+              name={structuredData?.name}
+              id={id}
+              types={structuredData?.types}
+              abilities={structuredData?.abilities}
+            />
+            <Stats data={structuredData?.stats} />
+            <EvolutionChain id={id} chainUrl={dataSpecies?.evolution_chain?.url} />
+          </div>
+          <div className="block sm:hidden">
+            <NavigationButtons id={Number(id)} />
+          </div>
         </div>
       </div>
-    </div>
-
-  );
+    );
+  } catch (error) {
+    console.error('Error in PokemonPage:', error);
+    return <div>Error loading Pokémon data</div>;
+  }
 }
-
 
 export default PokemonPage;
